@@ -2,7 +2,6 @@ package main
 
 import (
 	"bgo/app"
-	"fmt"
 	"net/http"
 )
 
@@ -29,15 +28,20 @@ import (
 //}
 
 func main() {
-	bgo:=app.NewBgo()
+	bgo := app.NewBgo()
+	bgo.GET("/", func(c *app.Context) {
+		c.HTML(http.StatusOK, "<h1>Hello Gee</h1>")
+	})
 
-	bgo.GET("/index",indexHandler)
-	bgo.GET("/",indexHandler)
-	bgo.Run(":9008")
-}
 
-// handler echoes r.URL.Path
-func indexHandler(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(w, "URL.Path = %q\n", req.URL.Path)
+	bgo.GET("/hello", func(c *app.Context) {
+		c.JSON(http.StatusOK, app.H{
+			"username": c.PostForm("username"),
+			"password": c.PostForm("password"),
+		})
+	})
+	bgo.Run(":9999")
+
+
 }
 
